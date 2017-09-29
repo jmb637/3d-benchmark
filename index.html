@@ -1,0 +1,48 @@
+﻿<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <title>CPU/GPU 3D Rendering Interactive Benchmark</title>
+    <script id="shader-vs" type="x-shader/x-vertex">
+        attribute vec3 a_position;
+
+        uniform mat4 u_projectionModel;
+        uniform mat4 u_view;
+
+        void main(void) {
+            gl_Position = u_projectionModel * u_view * vec4(a_position, 1.0);
+        }
+    </script>
+    <script id="shader-fs" type="x-shader/x-fragment">
+        precision mediump float;
+
+        const vec4 white = vec4(1.0, 1.0, 1.0, 1.0);
+
+        void main(void) {
+            gl_FragColor = white;
+        }
+    </script>
+    <script src="benchmark.js"></script>
+</head>
+
+<body>
+    <div id="container">
+        <canvas id="cpu_canvas" width="800" height="800"></canvas>
+        <canvas id="gpu_canvas" width="800" height="800" style="display:none;"></canvas>
+        <div>
+            <pre>renderer: <span id="renderer_type"></span>  fps: <span id="fps"></span>  # of cubes: <span id="cube_count"></span></pre>
+            <button id="change_renderer">Change Renderer</button>
+            <button id="add_cubes">Add Cubes</button>
+            <button id="remove_cubes">Remove Cubes</button>
+            <button id="reset">Reset</button>
+            <p>'W' to move forwards - 'A' to move left - 'S' to move right - 'D' to move backwards - 'Q' to move down - 'E' to move up</p>
+            <p>'K' to look left - 'O' to look up - 'L' to look down - ';' to look right</p>
+        </div>
+    </div>
+</body>
+
+</html>

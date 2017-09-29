@@ -1,0 +1,12 @@
+{
+  "name": "benchmark",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "node ./test/vectorTest.js && node ./test/matrixTest.js",
+    "start": "node ./build.js"
+  },
+  "dependencies": {
+    "browserify": "^14.4.0"
+  },
+  "license": "MIT"
+}
