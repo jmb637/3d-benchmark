@@ -296,27 +296,6 @@ class Camera {
     return this.position;
   }
 
-  /**
-   * @return a unit vector pointing in the direction the camera is facing
-   */
-  getForwardFacing() {
-    return this.forwardFacing;
-  }
-
-  /**
-   * @return a unit vector pointing to up relative to the direction the camera is facing
-   */
-  getUpFacing() {
-    return this.upFacing;
-  }
-
-  /**
- * @return a unit vector pointing to the right relative to the direction the camera is facing
- */
-  getRightFacing() {
-    return this.rightFacing;
-  }
-
   rotateRight(radians) {
     this.xzAngle = (this.xzAngle + radians) % (2 * Math.PI);
     this.applyRotation();
@@ -400,10 +379,13 @@ class Renderer {
   constructor(canvas, localTriangles, fovRadians) {
     this.canvas = canvas;
     this.localTriangles = localTriangles;
+    
     this.viewingAngle = fovRadians;
     this.viewingAngleTanValue = Math.tan(this.viewingAngle / 2);
+    
     this.minViewingDistance = 0;
     this.maxViewingDistance = 100;
+    
     this.bmp = new ZBufferedBitmap(canvas.getContext("2d"));
   }
 
@@ -450,10 +432,10 @@ class Renderer {
 
   projectVector(camera, triangles, index) {
     const relativeVector = vector.subtract(triangles, index, camera.getPosition(), 0);
-    const depth = vector.dotProduct(camera.getForwardFacing(), 0, relativeVector, 0);
+    const depth = vector.dotProduct(camera.forwardFacing, 0, relativeVector, 0);
 
-    const x = vector.dotProduct(camera.getRightFacing(), 0, relativeVector, 0);
-    const y = vector.dotProduct(camera.getUpFacing(), 0, relativeVector, 0);
+    const x = vector.dotProduct(camera.rightFacing, 0, relativeVector, 0);
+    const y = vector.dotProduct(camera.upFacing, 0, relativeVector, 0);
 
     // viewingAngleTanValue is used as the minimum projection length.
     const projectionLength = Math.max(

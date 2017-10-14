@@ -15,10 +15,13 @@ class Renderer {
   constructor(canvas, localTriangles, fovRadians) {
     this.canvas = canvas;
     this.localTriangles = localTriangles;
+    
     this.viewingAngle = fovRadians;
     this.viewingAngleTanValue = Math.tan(this.viewingAngle / 2);
+    
     this.minViewingDistance = 0;
     this.maxViewingDistance = 100;
+    
     this.bmp = new ZBufferedBitmap(canvas.getContext("2d"));
   }
 
@@ -65,10 +68,10 @@ class Renderer {
 
   projectVector(camera, triangles, index) {
     const relativeVector = vector.subtract(triangles, index, camera.getPosition(), 0);
-    const depth = vector.dotProduct(camera.getForwardFacing(), 0, relativeVector, 0);
+    const depth = vector.dotProduct(camera.forwardFacing, 0, relativeVector, 0);
 
-    const x = vector.dotProduct(camera.getRightFacing(), 0, relativeVector, 0);
-    const y = vector.dotProduct(camera.getUpFacing(), 0, relativeVector, 0);
+    const x = vector.dotProduct(camera.rightFacing, 0, relativeVector, 0);
+    const y = vector.dotProduct(camera.upFacing, 0, relativeVector, 0);
 
     // viewingAngleTanValue is used as the minimum projection length.
     const projectionLength = Math.max(

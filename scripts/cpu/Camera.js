@@ -46,27 +46,6 @@ class Camera {
     return this.position;
   }
 
-  /**
-   * @return a unit vector pointing in the direction the camera is facing
-   */
-  getForwardFacing() {
-    return this.forwardFacing;
-  }
-
-  /**
-   * @return a unit vector pointing to up relative to the direction the camera is facing
-   */
-  getUpFacing() {
-    return this.upFacing;
-  }
-
-  /**
- * @return a unit vector pointing to the right relative to the direction the camera is facing
- */
-  getRightFacing() {
-    return this.rightFacing;
-  }
-
   rotateRight(radians) {
     this.xzAngle = (this.xzAngle + radians) % (2 * Math.PI);
     this.applyRotation();
