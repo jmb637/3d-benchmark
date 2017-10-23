@@ -12,16 +12,16 @@ const ZBufferedBitmap = require('./ZBufferedBitmap.js');
 const vector = require('./vector.js');
 
 class Renderer {
-  constructor(canvas, localTriangles, fovRadians) {
+  constructor(canvas, localTriangles, fovRadians, aspectRatio) {
     this.canvas = canvas;
     this.localTriangles = localTriangles;
-    
-    this.viewingAngle = fovRadians;
-    this.viewingAngleTanValue = Math.tan(this.viewingAngle / 2);
-    
+
+    this.viewingAngleTanValue = Math.tan(fovRadians / 2);
+    this.aspectRatio = aspectRatio;
+
     this.minViewingDistance = 0;
     this.maxViewingDistance = 100;
-    
+
     this.bmp = new ZBufferedBitmap(canvas.getContext("2d"));
   }
 
@@ -74,13 +74,15 @@ class Renderer {
     const y = vector.dotProduct(camera.upFacing, 0, relativeVector, 0);
 
     // viewingAngleTanValue is used as the minimum projection length.
-    const projectionLength = Math.max(
+    const xProjectionLength = Math.max(
       Math.abs(depth) * this.viewingAngleTanValue,
       this.viewingAngleTanValue
     );
-    const normalizedX = ((x / projectionLength) + 1) / 2;
+    const yProjectionLength = xProjectionLength / this.aspectRatio;
+
+    const normalizedX = ((x / xProjectionLength) + 1) / 2;
     // y needs to be negative because y values for a screen decrease from top to bottom
-    const normalizedY = ((-y / projectionLength) + 1) / 2;
+    const normalizedY = ((-y / yProjectionLength) + 1) / 2;
 
     return [normalizedX * this.canvas.width, normalizedY * this.canvas.height, depth];
   }

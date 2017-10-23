@@ -86,8 +86,8 @@ function createPerspective(viewingAngleRadians, aspectRatio, near, far) {
   const matrix = new Float32Array(16);
   const tanAngle = Math.tan(viewingAngleRadians / 2);
 
-  matrix[0] = 1 / (tanAngle * aspectRatio);
-  matrix[5] = 1 / tanAngle;
+  matrix[0] = 1 / tanAngle;
+  matrix[5] = 1 / (tanAngle / aspectRatio);
   matrix[10] = (near + far) / (far - near);
   matrix[11] = 1;
   matrix[14] = (2 * near * far) / (near - far);

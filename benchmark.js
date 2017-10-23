@@ -16,9 +16,9 @@ window.addEventListener('DOMContentLoaded', () => {
   const cpuCamera = new CPUCamera(0, 0, -5, 0, 0);
   // Two separate canvases are needed because a canvas can only provide one type of drawing context.
   const cpuCanvas = document.getElementById('cpu_canvas');
-  const cpuRenderer = new CPURenderer(cpuCanvas, cube, Math.PI / 2);
+  const cpuRenderer = new CPURenderer(cpuCanvas, cube, Math.PI / 2, 4 / 3);
 
-  const gpuCamera = new GPUCamera(0, 0, -5, 0, 0, Math.PI / 2);
+  const gpuCamera = new GPUCamera(0, 0, -5, 0, 0, Math.PI / 2, 4 / 3);
   const gpuCanvas = document.getElementById('gpu_canvas');
   const gpuRenderer = new GPURenderer(gpuCanvas, cube);
 
@@ -94,7 +94,7 @@ window.addEventListener('DOMContentLoaded', () => {
     updateCubes();
   });
 
-  // The active render isn't reset to the CPU renderer.
+  // The active renderer isn't reset to the CPU renderer.
   const reset = document.getElementById('reset');
   reset.addEventListener('click', () => {
     cubeFactor = 1;
@@ -148,7 +148,7 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 
   function processActiveKeys() {
-    const speed = 1;
+    const distance = 1;
     const rotation = (4 / 180) * Math.PI;
 
     for (let keyCode of activeKeyCodeSet) {
@@ -171,27 +171,27 @@ window.addEventListener('DOMContentLoaded', () => {
           break;
         case 87:
           // "KeyW"
-          activeCamera.moveForward(speed);
+          activeCamera.moveForward(distance);
           break;
         case 65:
           // "KeyA"
-          activeCamera.moveRight(-speed);
+          activeCamera.moveRight(-distance);
           break;
         case 83:
           // "KeyS"
-          activeCamera.moveForward(-speed);
+          activeCamera.moveForward(-distance);
           break;
         case 68:
           // "KeyD"
-          activeCamera.moveRight(speed);
+          activeCamera.moveRight(distance);
           break;
         case 81:
           // "KeyQ"
-          activeCamera.moveUp(-speed);
+          activeCamera.moveUp(-distance);
           break;
         case 69:
           // "KeyE"
-          activeCamera.moveUp(speed);
+          activeCamera.moveUp(distance);
           break;
       }
     }
@@ -382,16 +382,16 @@ const ZBufferedBitmap = require('./ZBufferedBitmap.js');
 const vector = require('./vector.js');
 
 class Renderer {
-  constructor(canvas, localTriangles, fovRadians) {
+  constructor(canvas, localTriangles, fovRadians, aspectRatio) {
     this.canvas = canvas;
     this.localTriangles = localTriangles;
-    
-    this.viewingAngle = fovRadians;
-    this.viewingAngleTanValue = Math.tan(this.viewingAngle / 2);
-    
+
+    this.viewingAngleTanValue = Math.tan(fovRadians / 2);
+    this.aspectRatio = aspectRatio;
+
     this.minViewingDistance = 0;
     this.maxViewingDistance = 100;
-    
+
     this.bmp = new ZBufferedBitmap(canvas.getContext("2d"));
   }
 
@@ -444,13 +444,15 @@ class Renderer {
     const y = vector.dotProduct(camera.upFacing, 0, relativeVector, 0);
 
     // viewingAngleTanValue is used as the minimum projection length.
-    const projectionLength = Math.max(
+    const xProjectionLength = Math.max(
       Math.abs(depth) * this.viewingAngleTanValue,
       this.viewingAngleTanValue
     );
-    const normalizedX = ((x / projectionLength) + 1) / 2;
+    const yProjectionLength = xProjectionLength / this.aspectRatio;
+
+    const normalizedX = ((x / xProjectionLength) + 1) / 2;
     // y needs to be negative because y values for a screen decrease from top to bottom
-    const normalizedY = ((-y / projectionLength) + 1) / 2;
+    const normalizedY = ((-y / yProjectionLength) + 1) / 2;
 
     return [normalizedX * this.canvas.width, normalizedY * this.canvas.height, depth];
   }
@@ -701,9 +703,9 @@ exports.tIndex = tIndex;
 const matrix = require('./matrix.js');
 
 class Camera {
-  constructor(x, y, z, radiansRight, radiansUp, fovRadians) {
+  constructor(x, y, z, radiansRight, radiansUp, fovRadians, aspectRatio) {
     this.model = matrix.createIdentityMat4();
-    this.projection = matrix.createPerspective(fovRadians, 1, 1, 100);
+    this.projection = matrix.createPerspective(fovRadians, aspectRatio, 1, 100);
     this.projectionModel = matrix.createIdentityMat4();
 
     this.reset(x, y, z, radiansRight, radiansUp);
@@ -963,8 +965,8 @@ function createPerspective(viewingAngleRadians, aspectRatio, near, far) {
   const matrix = new Float32Array(16);
   const tanAngle = Math.tan(viewingAngleRadians / 2);
 
-  matrix[0] = 1 / (tanAngle * aspectRatio);
-  matrix[5] = 1 / tanAngle;
+  matrix[0] = 1 / tanAngle;
+  matrix[5] = 1 / (tanAngle / aspectRatio);
   matrix[10] = (near + far) / (far - near);
   matrix[11] = 1;
   matrix[14] = (2 * near * far) / (near - far);

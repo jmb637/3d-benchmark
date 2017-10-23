@@ -7,9 +7,9 @@
 const matrix = require('./matrix.js');
 
 class Camera {
-  constructor(x, y, z, radiansRight, radiansUp, fovRadians) {
+  constructor(x, y, z, radiansRight, radiansUp, fovRadians, aspectRatio) {
     this.model = matrix.createIdentityMat4();
-    this.projection = matrix.createPerspective(fovRadians, 1, 1, 100);
+    this.projection = matrix.createPerspective(fovRadians, aspectRatio, 1, 100);
     this.projectionModel = matrix.createIdentityMat4();
 
     this.reset(x, y, z, radiansRight, radiansUp);

@@ -15,9 +15,9 @@ window.addEventListener('DOMContentLoaded', () => {
   const cpuCamera = new CPUCamera(0, 0, -5, 0, 0);
   // Two separate canvases are needed because a canvas can only provide one type of drawing context.
   const cpuCanvas = document.getElementById('cpu_canvas');
-  const cpuRenderer = new CPURenderer(cpuCanvas, cube, Math.PI / 2);
+  const cpuRenderer = new CPURenderer(cpuCanvas, cube, Math.PI / 2, 4 / 3);
 
-  const gpuCamera = new GPUCamera(0, 0, -5, 0, 0, Math.PI / 2);
+  const gpuCamera = new GPUCamera(0, 0, -5, 0, 0, Math.PI / 2, 4 / 3);
   const gpuCanvas = document.getElementById('gpu_canvas');
   const gpuRenderer = new GPURenderer(gpuCanvas, cube);
 
@@ -93,7 +93,7 @@ window.addEventListener('DOMContentLoaded', () => {
     updateCubes();
   });
 
-  // The active render isn't reset to the CPU renderer.
+  // The active renderer isn't reset to the CPU renderer.
   const reset = document.getElementById('reset');
   reset.addEventListener('click', () => {
     cubeFactor = 1;
@@ -147,7 +147,7 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 
   function processActiveKeys() {
-    const speed = 1;
+    const distance = 1;
     const rotation = (4 / 180) * Math.PI;
 
     for (let keyCode of activeKeyCodeSet) {
@@ -170,27 +170,27 @@ window.addEventListener('DOMContentLoaded', () => {
           break;
         case 87:
           // "KeyW"
-          activeCamera.moveForward(speed);
+          activeCamera.moveForward(distance);
           break;
         case 65:
           // "KeyA"
-          activeCamera.moveRight(-speed);
+          activeCamera.moveRight(-distance);
           break;
         case 83:
           // "KeyS"
-          activeCamera.moveForward(-speed);
+          activeCamera.moveForward(-distance);
           break;
         case 68:
           // "KeyD"
-          activeCamera.moveRight(speed);
+          activeCamera.moveRight(distance);
           break;
         case 81:
           // "KeyQ"
-          activeCamera.moveUp(-speed);
+          activeCamera.moveUp(-distance);
           break;
         case 69:
           // "KeyE"
-          activeCamera.moveUp(speed);
+          activeCamera.moveUp(distance);
           break;
       }
     }
