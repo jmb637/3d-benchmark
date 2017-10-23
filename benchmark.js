@@ -124,6 +124,10 @@ window.addEventListener('DOMContentLoaded', () => {
   const activeKeyCodeSet = new Set();
   let interval = null;
   window.addEventListener('keydown', (event) => {
+    if (event.keyCode >= 37 && event.keyCode <= 40) {
+      event.preventDefault();
+    }
+
     activeKeyCodeSet.add(event.keyCode);
 
     if (interval === null) {
@@ -149,21 +153,21 @@ window.addEventListener('DOMContentLoaded', () => {
 
     for (let keyCode of activeKeyCodeSet) {
       switch (keyCode) {
-        case 75:
-          // "KeyK"
+        case 37:
+          // "LeftArrow"
           activeCamera.rotateRight(-rotation);
           break;
-        case 79:
-          // "KeyO"
+        case 38:
+          // "UpArrow"
           activeCamera.rotateUp(rotation);
           break;
-        case 76:
-          // "KeyL"
-          activeCamera.rotateUp(-rotation);
-          break;
-        case 186:
-          // "Key;"
+        case 39:
+          // "RightArrow"
           activeCamera.rotateRight(rotation);
+          break;
+        case 40:
+          // "DownArrow"
+          activeCamera.rotateUp(-rotation);
           break;
         case 87:
           // "KeyW"
@@ -194,8 +198,10 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 });
 
+/**
+ * @return an array of local coords for a standard cube with side lengths = 2
+ */
 function getCube() {
-  // Local coords for a standard cube with side lengths = 2.
   return [
     // Near
     -1, 1, -1,
