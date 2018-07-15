@@ -30,7 +30,7 @@ window.addEventListener('DOMContentLoaded', () => {
   let activeCamera = cpuCamera;
 
   const rendererType = document.getElementById('renderer_type');
-  rendererType.innerText = 'CPU-based';
+  rendererType.innerText = 'CPU';
 
   const fpsLabel = document.getElementById('fps');
   let lastFrame = null;
@@ -68,7 +68,7 @@ window.addEventListener('DOMContentLoaded', () => {
       cpuCanvas.style.display = 'none';
       gpuCanvas.style.display = 'inline';
 
-      rendererType.innerText = 'GPU-based';
+      rendererType.innerText = 'GPU';
     } else {
       activeRenderer = cpuRenderer;
       cpuCamera.clone(activeCamera);
@@ -77,7 +77,7 @@ window.addEventListener('DOMContentLoaded', () => {
       gpuCanvas.style.display = 'none';
       cpuCanvas.style.display = 'inline';
 
-      rendererType.innerText = 'CPU-based';
+      rendererType.innerText = 'CPU';
     }
   });
 

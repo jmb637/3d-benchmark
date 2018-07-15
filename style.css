@@ -1,19 +1,37 @@
-body {
-  font-size: 20px;
-  text-align: center;
+.container-fluid > div {
+    width: 900px;
 }
 
-button {
-  font-size: 18px;
+.btn { 
+    box-shadow: none !important;
+    font-weight: 700;
 }
 
-a {
-  color: black;
-  font-size: 18px;
-  font-style: italic;
+.btn-primary {
+    background-color: #2790ff;
+    border-color: #2790ff;
+    color: #fff;
 }
 
-#container {
-  margin: auto;
-  padding-top: 20px;
+.btn-secondary {
+    background-color: #646b71;
+    border-color: #646b71;
+    color: #fff;
+}
+
+.btn-add {
+    background-color: #4bab4f;
+    border-color: #4bab4f;
+    color: #fff;
+}
+
+.btn-remove {
+    background-color: #e45f50;
+    border-color: #e45f50;
+    color: #fff;
+}
+
+table {
+    table-layout: fixed;
+    word-wrap: break-word;
 }
