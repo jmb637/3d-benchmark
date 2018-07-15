@@ -6,6 +6,7 @@ function createIdentityMat4() {
   matrix[5] = 1;
   matrix[10] = 1;
   matrix[15] = 1;
+
   return matrix;
 }
 
@@ -19,7 +20,9 @@ function setIdentityMat4(matrix) {
   }
 }
 
-function multiplyMat4ByMat4(matrixA, matrixB, copyMatrix) {
+function multiplyMat4ByMat4(matrixA, matrixB, matrixOut) {
+  const result = createIdentityMat4();
+
   for (let c = 0; c < 4; ++c) {
     for (let r = 0; r < 4; ++r) {
       let sum = 0;
@@ -27,8 +30,12 @@ function multiplyMat4ByMat4(matrixA, matrixB, copyMatrix) {
         sum += matrixA[r + i * 4] * matrixB[i + c * 4];
       }
 
-      copyMatrix[r + c * 4] = sum;
+      result[r + c * 4] = sum;
     }
+  }
+
+  for (let i = 0; i < matrixOut.length; ++i) {
+    matrixOut[i] = result[i];
   }
 }
 
@@ -39,47 +46,23 @@ function translateMat4(matrix, x, y, z) {
 }
 
 function applyXZRotationMat4(matrix, radians) {
-  const rot0 = Math.cos(radians);
-  const rot8 = -Math.sin(radians);
-  const rot2 = Math.sin(radians);
-  const rot10 = Math.cos(radians);
+  const rotation = createIdentityMat4();
+  rotation[0] = Math.cos(radians);
+  rotation[8] = -Math.sin(radians);
+  rotation[2] = Math.sin(radians);
+  rotation[10] = Math.cos(radians);
 
-  const out0 = rot0 * matrix[0] + rot8 * matrix[2];
-  const out4 = rot0 * matrix[4] + rot8 * matrix[6];
-  const out8 = rot0 * matrix[8] + rot8 * matrix[10];
-  const out12 = rot0 * matrix[12] + rot8 * matrix[14];
-
-  matrix[2] = rot2 * matrix[0] + rot10 * matrix[2];
-  matrix[6] = rot2 * matrix[4] + rot10 * matrix[6];
-  matrix[10] = rot2 * matrix[8] + rot10 * matrix[10];
-  matrix[14] = rot2 * matrix[12] + rot10 * matrix[14];
-
-  matrix[0] = out0;
-  matrix[4] = out4;
-  matrix[8] = out8;
-  matrix[12] = out12;
+  multiplyMat4ByMat4(rotation, matrix, matrix);
 }
 
 function applyYZRotationMat4(matrix, radians) {
-  const rot5 = Math.cos(radians);
-  const rot9 = Math.sin(radians);
-  const rot6 = -Math.sin(radians);
-  const rot10 = Math.cos(radians);
+  const rotation = createIdentityMat4();
+  rotation[5] = Math.cos(radians);
+  rotation[9] = Math.sin(radians);
+  rotation[6] = -Math.sin(radians);
+  rotation[10] = Math.cos(radians);
 
-  const out1 = rot5 * matrix[1] + rot9 * matrix[2];
-  const out5 = rot5 * matrix[5] + rot9 * matrix[6];
-  const out9 = rot5 * matrix[9] + rot9 * matrix[10];
-  const out13 = rot5 * matrix[13] + rot9 * matrix[14];
-
-  matrix[2] = rot6 * matrix[1] + rot10 * matrix[2];
-  matrix[6] = rot6 * matrix[5] + rot10 * matrix[6];
-  matrix[10] = rot6 * matrix[9] + rot10 * matrix[10];
-  matrix[14] = rot6 * matrix[13] + rot10 * matrix[14];
-
-  matrix[1] = out1;
-  matrix[5] = out5;
-  matrix[9] = out9;
-  matrix[13] = out13;
+  multiplyMat4ByMat4(rotation, matrix, matrix);
 }
 
 function createPerspective(viewingAngleRadians, aspectRatio, near, far) {

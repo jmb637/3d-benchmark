@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * This class maintains and manipulates position and facing information.
+ * Manages position and facing state.
  */
 
 const matrix = require('./matrix.js');
@@ -34,8 +34,8 @@ class Camera {
   }
 
   /**
-    * Moves forward relative to the ground, not the forward facing vector.
-    */
+   * Moves forward relative to the ground, not the forward facing vector.
+   */
   moveForward(amount) {
     this.x += Math.sin(this.xzAngle) * amount;
     this.z += Math.cos(this.xzAngle) * amount;
@@ -61,8 +61,8 @@ class Camera {
   }
 
   /**
-     * Up-down rotation is restricted to [-pi/2, pi/2] to make the camera easier to control.
-     */
+   * Up-down rotation is restricted to [-pi/2, pi/2] to make the camera easier to control.
+   */
   rotateUp(radians) {
     const minAngle = -.5 * Math.PI;
     const maxAngle = -minAngle;
@@ -70,8 +70,8 @@ class Camera {
   }
 
   /**
- * Left-right rotation is applied before Up-down rotation.
- */
+   * Left-right rotation is applied before Up-down rotation.
+   */
   getUpdatedProjectionModel() {
     matrix.setIdentityMat4(this.model);
     // x, y, z are negative because objects move opposite to the direction the camera is moving
